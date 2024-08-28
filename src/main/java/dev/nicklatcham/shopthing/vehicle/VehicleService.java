@@ -5,32 +5,42 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import dev.nicklatcham.shopthing.customer.Customer;
+import dev.nicklatcham.shopthing.customer.CustomerNotFoundException;
+import dev.nicklatcham.shopthing.customer.CustomerService;
+
 @Service
 public class VehicleService {
 
   private final VehicleRepository vehicleRepo;
+  private final CustomerService customerService;
 
-  public VehicleService(VehicleRepository vehicleRepo) {
+  public VehicleService(VehicleRepository vehicleRepo, CustomerService customerService) {
     this.vehicleRepo = vehicleRepo;
+    this.customerService = customerService;
   }
 
   public List<Vehicle> getAllVehicles() {
     return vehicleRepo.findAll();
   }
 
-  public Optional<Vehicle> getVehicleById(Long id) {
-    return vehicleRepo.findById(id);
+  public Vehicle getVehicleById(Long id) {
+    return vehicleRepo
+        .findById(id)
+        .orElseThrow(() -> new VehicleNotFoundException(id));
   }
 
   public Vehicle createVehicle(Vehicle newVehicle) {
     return vehicleRepo.save(newVehicle);
   }
 
-  // FIXME: Need to get reference to customer from id sent from route handler.
   public Vehicle updateVehicleOwner(Long id, Long customerId) {
+    Customer customer = customerService.getCustomerById(customerId);
     Vehicle vehicleToUpdate = vehicleRepo.getReferenceById(id);
-    vehicleToUpdate.setCustomer(customerId);
+
+    vehicleRepo.getReferenceById(id).setCustomer(customer);
 
     return vehicleRepo.save(vehicleToUpdate);
   }
+
 }
