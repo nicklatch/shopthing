@@ -2,9 +2,11 @@ package dev.nicklatcham.shopthing.vehicle;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import dev.nicklatcham.shopthing.customer.Customer;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,9 +34,9 @@ public class Vehicle {
   @Length(min = 17, max = 17, message = "VIN must be exactly 17 characters long")
   private String vin;
 
-  @Nullable
-  @ManyToOne
-  @JoinColumn(name = "customer_id")
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "customer_id", nullable = true)
+  @JsonIgnoreProperties(value = { "customer_id", "assets" }, allowSetters = true)
   private Customer customer;
 
   Vehicle() {
@@ -44,6 +46,13 @@ public class Vehicle {
     this.make = make;
     this.model = model;
     this.vin = vin;
+  }
+
+  public Vehicle(String make, String model, String vin, Customer customer) {
+    this.make = make;
+    this.model = model;
+    this.vin = vin;
+    this.customer = customer;
   }
 
   public Long getId() {
@@ -131,7 +140,7 @@ public class Vehicle {
 
   @Override
   public String toString() {
-    return "Vehicle [id=" + id + ", make=" + make + ", model=" + model + ", vin=" + vin + "]";
+    return "Vehicle [id=" + id + ", make=" + make + ", model=" + model + ", vin=" + vin + "customer=" + customer + "]";
   }
 
 }
