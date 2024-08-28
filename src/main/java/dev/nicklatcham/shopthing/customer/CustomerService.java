@@ -1,8 +1,6 @@
 package dev.nicklatcham.shopthing.customer;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +16,10 @@ public class CustomerService {
     return customerRepo.findAll();
   }
 
-  public Optional<Customer> getCustomerById(Long id) {
-    return customerRepo.findById(id);
+  public Customer getCustomerById(Long id) {
+    return customerRepo
+        .findById(id)
+        .orElseThrow(() -> new CustomerNotFoundException(id));
   }
 
   public Customer createCustomer(Customer customer) {
