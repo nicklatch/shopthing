@@ -1,11 +1,12 @@
 package dev.nicklatcham.shopthing.exception;
 
+import java.util.Collections;
 import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.transaction.TransactionSystemException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,17 +22,28 @@ public class GlobalControllerExceptionAdvice {
   private static final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerExceptionAdvice.class);
 
   @ResponseBody
-  @ExceptionHandler(TransactionSystemException.class)
+  @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  ErrorMessage constraintValidationExeptionHandler(final TransactionSystemException txEx, final WebRequest req) {
+  ErrorMessage constraintValidationExeptionHandler(final MethodArgumentNotValidException ex, final WebRequest req) {
     // TODO: Parse error message into something that is actually readable.
     final ErrorMessage errorMessage = new ErrorMessage(
         400,
         new Date(),
-        txEx.getMessage(),
+        ex.getMessage(),
         req.getDescription(false));
 
-    LOGGER.info(errorMessage.toString());
+    ex.getAllErrors().forEach(e -> LOGGER.info("{}\n", e));
+
+    LOGGER.error("An Error Occured:\n\terrors: {}", ex.getMessage(),
+        ex.getAllErrors().stream().map(err -> err.toString() + "\n").toList());
+
+    // LOGGER
+    // .atError()
+    // .setMessage("An Error Occured")
+    // .addKeyValue("message", ex.getMessage())
+    // .addKeyValue("errors", ex.getAllErrors())
+    // .addKeyValue("description", req.getDescription(false))
+    // .log();
 
     return errorMessage;
   }
