@@ -1,5 +1,9 @@
 package dev.nicklatcham.shopthing.vehicle;
 
+import dev.nicklatcham.shopthing.repairOrder.RepairOrder;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,6 +18,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.data.annotation.CreatedDate;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Vehicle {
@@ -34,24 +43,46 @@ public class Vehicle {
   @Length(min = 17, max = 17, message = "VIN must be exactly 17 characters long")
   private String vin;
 
+  // TODO: Constraints
+  private int odometer;
+
+  // TODO: Constraints
+  private int engineHours;
+
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "customer_id", nullable = true)
-  @JsonIgnoreProperties(value = { "customer_id", "assets" }, allowSetters = true)
+  @JsonIgnoreProperties(value = {"customer_id", "assets"}, allowSetters = true)
   private Customer customer;
 
-  Vehicle() {
+
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "vehicle", orphanRemoval = true)
+  @JsonIgnoreProperties(value = {"vehicle"}, allowSetters = true)
+  private Set<RepairOrder> repairOrders = new HashSet<>();
+
+  @CreatedDate
+  private Date createdAt;
+
+  @UpdateTimestamp
+  private Date updatedAt;
+
+  protected Vehicle() {
   }
 
-  public Vehicle(String make, String model, String vin) {
+  public Vehicle(String make, String model, String vin, int odometer, int engineHours) {
     this.make = make;
     this.model = model;
     this.vin = vin;
+    this.odometer = odometer;
+    this.engineHours = engineHours;
   }
 
-  public Vehicle(String make, String model, String vin, Customer customer) {
+  public Vehicle(String make, String model, String vin, int odometer, int engineHours,
+      Customer customer) {
     this.make = make;
     this.model = model;
     this.vin = vin;
+    this.odometer = odometer;
+    this.engineHours = engineHours;
     this.customer = customer;
   }
 
@@ -87,6 +118,22 @@ public class Vehicle {
     this.vin = vin;
   }
 
+  public int getOdometer() {
+    return odometer;
+  }
+
+  public void setOdometer(int odometer) {
+    this.odometer = odometer;
+  }
+
+  public int getEngineHours() {
+    return engineHours;
+  }
+
+  public void setEngineHours(int engineHours) {
+    this.engineHours = engineHours;
+  }
+
   public Customer getCustomer() {
     return customer;
   }
@@ -96,51 +143,36 @@ public class Vehicle {
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Vehicle vehicle = (Vehicle) o;
+    return Objects.equals(id, vehicle.id) && Objects.equals(make, vehicle.make) && Objects.equals(
+        model, vehicle.model) && Objects.equals(vin, vehicle.vin) && Objects.equals(customer,
+        vehicle.customer) && Objects.equals(createdAt, vehicle.createdAt) && Objects.equals(
+        updatedAt, vehicle.updatedAt);
+  }
+
+  @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((make == null) ? 0 : make.hashCode());
-    result = prime * result + ((model == null) ? 0 : model.hashCode());
-    result = prime * result + ((vin == null) ? 0 : vin.hashCode());
+    int result = Objects.hashCode(id);
+    result = 31 * result + Objects.hashCode(make);
+    result = 31 * result + Objects.hashCode(model);
+    result = 31 * result + Objects.hashCode(vin);
+    result = 31 * result + Objects.hashCode(customer);
+    result = 31 * result + Objects.hashCode(createdAt);
+    result = 31 * result + Objects.hashCode(updatedAt);
     return result;
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    Vehicle other = (Vehicle) obj;
-    if (id == null) {
-      if (other.id != null)
-        return false;
-    } else if (!id.equals(other.id))
-      return false;
-    if (make == null) {
-      if (other.make != null)
-        return false;
-    } else if (!make.equals(other.make))
-      return false;
-    if (model == null) {
-      if (other.model != null)
-        return false;
-    } else if (!model.equals(other.model))
-      return false;
-    if (vin == null) {
-      if (other.vin != null)
-        return false;
-    } else if (!vin.equals(other.vin))
-      return false;
-    return true;
-  }
-
-  @Override
   public String toString() {
-    return "Vehicle [id=" + id + ", make=" + make + ", model=" + model + ", vin=" + vin + "customer=" + customer + "]";
+    return STR."Vehicle [id=\{id}, make=\{make}, model=\{model}, vin=\{vin}customer=\{customer}]";
   }
 
 }

@@ -1,10 +1,12 @@
 package dev.nicklatcham.shopthing.customer;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import dev.nicklatcham.shopthing.repairOrder.RepairOrder;
 import dev.nicklatcham.shopthing.vehicle.Vehicle;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +17,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 public class Customer {
@@ -36,7 +40,17 @@ public class Customer {
   @JsonIgnoreProperties(value = { "customer" }, allowSetters = true)
   private Set<Vehicle> assets = new HashSet<>();
 
-  Customer() {
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer", orphanRemoval = true)
+  @JsonIgnoreProperties(value = {"customer"}, allowSetters = true)
+  private Set<RepairOrder> repairOrders = new HashSet<>();
+
+  @CreatedDate
+  private Date createdAt;
+
+  @UpdateTimestamp
+  private Date updatedAt;
+
+  protected Customer() {
   }
 
   public Customer(String name, String phone, String email) {
@@ -126,8 +140,7 @@ public class Customer {
 
   @Override
   public String toString() {
-    return "Customer [id=" + id + ", name=" + name + ", phone=" + phone + ", email=" + email + ", assets=" + assets
-        + "]";
+    return STR."Customer [id=\{id}, name=\{name}, phone=\{phone}, email=\{email}, assets=\{assets}]";
   }
 
 }
