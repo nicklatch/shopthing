@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +42,7 @@ public class VehicleController {
   @PostMapping
   public ResponseEntity<?> createVehicle(@Valid @RequestBody Vehicle newVehicle) {
     final Vehicle created = vehicleService.createVehicle(newVehicle);
-    logger.debug("Created Vehicle: " + newVehicle.toString());
+    logger.debug(STR."Created Vehicle: \{newVehicle.toString()}");
     return ResponseEntity.status(201).body(created);
   }
 
