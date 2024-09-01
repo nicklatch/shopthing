@@ -30,4 +30,14 @@ public class CustomerService {
     return customerRepo.existsById(id);
   }
 
+  public Customer update(Customer updatedCustomer) {
+    Customer persistedUpdatedCustomer = customerRepo.getReferenceById(updatedCustomer.getId());
+
+    persistedUpdatedCustomer.setName(updatedCustomer.getName());
+    persistedUpdatedCustomer.setEmail(updatedCustomer.getEmail());
+    persistedUpdatedCustomer.setPhone(updatedCustomer.getPhone());
+
+    return customerRepo.save(persistedUpdatedCustomer);
+  }
+
 }
