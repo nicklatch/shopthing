@@ -140,7 +140,15 @@ public class Customer {
 
   @Override
   public String toString() {
-    return STR."Customer [id=\{id}, name=\{name}, phone=\{phone}, email=\{email}, assets=\{assets}]";
+    return "Customer{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", phone='" + phone + '\'' +
+        ", email='" + email + '\'' +
+        ", assets=" + assets +
+        ", repairOrders=" + repairOrders +
+        ", createdAt=" + createdAt +
+        ", updatedAt=" + updatedAt +
+        '}';
   }
-
 }

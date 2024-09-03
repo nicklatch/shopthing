@@ -6,6 +6,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,8 +35,8 @@ public class GlobalControllerExceptionAdvice {
 
     ex.getAllErrors().forEach(e -> LOGGER.info("{}\n", e));
 
-    LOGGER.error("An Error Occured:\n\terrors: {}", ex.getMessage(),
-        ex.getAllErrors().stream().map(err -> err.toString() + "\n").toList());
+    LOGGER.error("An Error Occurred: {}\n\terrors: {}\n\t", ex.getMessage(),
+        ex.getAllErrors().stream().map(ObjectError::toString).toList());
 
     // LOGGER
     // .atError()

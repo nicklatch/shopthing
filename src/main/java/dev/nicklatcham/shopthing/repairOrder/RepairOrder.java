@@ -106,6 +106,13 @@ public class RepairOrder {
 
   @Override
   public String toString() {
-    return STR."RepairOrder{id=\{id}, notes='\{notes}', customer=\{customer}, vehicle=\{vehicle}, createdAt=\{createdAt}, updatedAt=\{updatedAt}}";
+    return "RepairOrder{" +
+        "id=" + id +
+        ", notes='" + notes + '\'' +
+        ", customer=" + customer +
+        ", vehicle=" + vehicle +
+        ", createdAt=" + createdAt +
+        ", updatedAt=" + updatedAt +
+        '}';
   }
 }
