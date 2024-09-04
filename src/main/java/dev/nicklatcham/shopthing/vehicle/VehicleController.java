@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +18,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/vehicles")
 public class VehicleController {
+
   private final VehicleService vehicleService;
   private static final Logger logger = LoggerFactory.getLogger(VehicleController.class);
 
@@ -42,7 +42,8 @@ public class VehicleController {
   @PostMapping
   public ResponseEntity<?> createVehicle(@Valid @RequestBody Vehicle newVehicle) {
     final Vehicle created = vehicleService.createVehicle(newVehicle);
-    logger.debug(STR."Created Vehicle: \{newVehicle.toString()}");
+    logger.debug("Created Vehicle: {}", newVehicle.toString());
+
     return ResponseEntity.status(201).body(created);
   }
 
