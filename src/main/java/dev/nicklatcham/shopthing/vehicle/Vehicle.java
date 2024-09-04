@@ -1,14 +1,21 @@
 package dev.nicklatcham.shopthing.vehicle;
 
-import dev.nicklatcham.shopthing.repairOrder.RepairOrder;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.annotation.CreatedDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import dev.nicklatcham.shopthing.customer.Customer;
+import dev.nicklatcham.shopthing.repairOrder.RepairOrder;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -16,13 +23,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.data.annotation.CreatedDate;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 @Entity
 public class Vehicle {
@@ -43,20 +46,20 @@ public class Vehicle {
   @Length(min = 17, max = 17, message = "VIN must be exactly 17 characters long")
   private String vin;
 
-  // TODO: Constraints
+  @PositiveOrZero
+  @Column(nullable = false)
   private int odometer;
 
-  // TODO: Constraints
+  @PositiveOrZero
   private int engineHours;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "customer_id", nullable = true)
-  @JsonIgnoreProperties(value = {"customer_id", "assets"}, allowSetters = true)
+  @JsonIgnoreProperties(value = { "customer_id", "assets" }, allowSetters = true)
   private Customer customer;
 
-
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "vehicle", orphanRemoval = true)
-  @JsonIgnoreProperties(value = {"vehicle"}, allowSetters = true)
+  @JsonIgnoreProperties(value = { "vehicle" }, allowSetters = true)
   private Set<RepairOrder> repairOrders = new HashSet<>();
 
   @CreatedDate
@@ -153,9 +156,11 @@ public class Vehicle {
 
     Vehicle vehicle = (Vehicle) o;
     return Objects.equals(id, vehicle.id) && Objects.equals(make, vehicle.make) && Objects.equals(
-        model, vehicle.model) && Objects.equals(vin, vehicle.vin) && Objects.equals(customer,
-        vehicle.customer) && Objects.equals(createdAt, vehicle.createdAt) && Objects.equals(
-        updatedAt, vehicle.updatedAt);
+        model, vehicle.model) && Objects.equals(vin, vehicle.vin)
+        && Objects.equals(customer,
+            vehicle.customer)
+        && Objects.equals(createdAt, vehicle.createdAt) && Objects.equals(
+            updatedAt, vehicle.updatedAt);
   }
 
   @Override
@@ -172,7 +177,8 @@ public class Vehicle {
 
   @Override
   public String toString() {
-    return STR."Vehicle [id=\{id}, make=\{make}, model=\{model}, vin=\{vin}customer=\{customer}]";
+    return "Vehicle [id=" + id + ", make=" + make + ", model=" + model + ", vin=" + vin + ", odometer=" + odometer
+        + ", engineHours=" + engineHours + "]";
   }
 
 }
