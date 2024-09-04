@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerService {
 
-  private CustomerRepository customerRepo;
+  private final CustomerRepository customerRepo;
 
   public CustomerService(CustomerRepository customerRepo) {
     this.customerRepo = customerRepo;
@@ -31,7 +31,7 @@ public class CustomerService {
   }
 
   public Customer update(Customer updatedCustomer) {
-    Customer persistedUpdatedCustomer = customerRepo.getReferenceById(updatedCustomer.getId());
+    Customer persistedUpdatedCustomer = this.getCustomerById(updatedCustomer.getId());
 
     persistedUpdatedCustomer.setName(updatedCustomer.getName());
     persistedUpdatedCustomer.setEmail(updatedCustomer.getEmail());
