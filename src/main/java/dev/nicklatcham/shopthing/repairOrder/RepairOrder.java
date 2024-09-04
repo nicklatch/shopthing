@@ -3,14 +3,12 @@ package dev.nicklatcham.shopthing.repairOrder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.nicklatcham.shopthing.customer.Customer;
 import dev.nicklatcham.shopthing.vehicle.Vehicle;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import java.sql.Date;
@@ -27,12 +25,12 @@ public class RepairOrder {
 
   @ManyToOne
   @JoinColumn(name = "customer_id", nullable = false)
-  @JsonIgnoreProperties(value = {"customer_id"}, allowSetters = true)
+  @JsonIgnoreProperties(value = {"customer_id", "assets"}, allowSetters = true)
   private Customer customer;
 
   @ManyToOne
   @JoinColumn(name = "vehicle_id", nullable = false)
-  @JsonIgnoreProperties(value = {"vehicle_id"}, allowSetters = true)
+  @JsonIgnoreProperties(value = {"vehicle_id", "customer"}, allowSetters = true)
   private Vehicle vehicle;
 
   @CreatedDate
