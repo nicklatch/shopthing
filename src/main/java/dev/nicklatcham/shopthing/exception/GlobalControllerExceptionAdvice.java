@@ -19,6 +19,7 @@ import org.springframework.web.context.request.WebRequest;
  */
 @RestControllerAdvice
 public class GlobalControllerExceptionAdvice {
+  // TODO: Consolidate all controller advice to here
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerExceptionAdvice.class);
 
@@ -38,13 +39,6 @@ public class GlobalControllerExceptionAdvice {
     LOGGER.error("An Error Occurred: {}\n\terrors: {}\n\t", ex.getMessage(),
         ex.getAllErrors().stream().map(ObjectError::toString).toList());
 
-    // LOGGER
-    // .atError()
-    // .setMessage("An Error Occured")
-    // .addKeyValue("message", ex.getMessage())
-    // .addKeyValue("errors", ex.getAllErrors())
-    // .addKeyValue("description", req.getDescription(false))
-    // .log();
 
     return errorMessage;
   }
