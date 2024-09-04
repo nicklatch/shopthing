@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import dev.nicklatcham.shopthing.repairOrder.RepairOrder;
 import dev.nicklatcham.shopthing.vehicle.Vehicle;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,6 +28,7 @@ public class Customer {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  @Column(unique = true)
   @NotBlank
   private String name;
 
