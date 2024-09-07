@@ -6,7 +6,7 @@ ___
 
 ## About <a name = "about"></a>
 > [!CAUTION]
-> This is barley even alpha at this point.
+> This is hardly even alpha at this point.
 
 ShopThing(name is still TBD) is curently just a backend JSON api for a shop management application aim at the heavy truck repair industry. More to come!
 
